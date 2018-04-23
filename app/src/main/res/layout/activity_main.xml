@@ -28,7 +28,6 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/switchDirection" />
 
@@ -70,7 +69,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="8dp"
         android:text="Direction -> "
         app:layout_constraintEnd_toStartOf="@+id/direction4"
         app:layout_constraintTop_toBottomOf="@+id/recyclerView1" />
@@ -101,6 +99,7 @@
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/switchDirection"
         app:layout_constraintEnd_toStartOf="@+id/switchDirection"
+        app:layout_constraintHorizontal_bias="0.7"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/switchDirection" />
 
@@ -111,6 +110,7 @@
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/switchDirection"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.3"
         app:layout_constraintStart_toEndOf="@+id/switchDirection"
         app:layout_constraintTop_toTopOf="@+id/switchDirection" />
 
@@ -132,5 +132,17 @@
         app:layout_constraintBottom_toBottomOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textView2" />
+
+    <android.support.constraint.Group
+        android:id="@+id/group1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="textView,direction3,recyclerView1" />
+
+    <android.support.constraint.Group
+        android:id="@+id/group2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="textView2,direction4,recyclerView2" />
 
 </android.support.constraint.ConstraintLayout>

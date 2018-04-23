@@ -16,12 +16,14 @@ class RouteSummariesChild(
         val DownDestination: String)
 
 //Return all Stop for one Route
-class ListOfStopsByRouteNoAndDirection(val responseObject: List<ListOfStopsByRouteNoAndDirectionInfoChild>)
+class RouteStopsByRoute(val responseObject: List<RouteStopsByRouteChild>)
 
-class ListOfStopsByRouteNoAndDirectionInfoChild(
-        val Name: String,
+class RouteStopsByRouteChild(
+        val StopName: String,
         val StopNo: Int,
-        val SuburbName: String
+        val SuburbName: String,
+        val StopSequence: Int,
+        val UpStop: Boolean
 )
 
 //Return all Route at one Stop

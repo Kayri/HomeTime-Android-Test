@@ -20,8 +20,8 @@ interface TramApiService {
     fun getRouteSummaries(@Query("aid") aid: String, @Query("tkn") tkn: String): Observable<RouteSummaries>
 
     //Return all Stop for one Route
-    @GET("GetListOfStopsByRouteNoAndDirection/{routeNo}/{isUpDirection}")
-    fun getListOfStopsByRouteNoAndDirection(@Path("routeNo") routeNo: Int, @Path("isUpDirection") isUpDirection: Boolean, @Query("aid") aid: String, @Query("tkn") tkn: String): Observable<ListOfStopsByRouteNoAndDirection>
+    @GET("GetRouteStopsByRoute/{routeNo}")
+    fun getRouteStopsByRoute(@Path("routeNo") routeNo: Int, @Query("aid") aid: String, @Query("tkn") tkn: String): Observable<RouteStopsByRoute>
 
     //Return all Route at one Stop //TODO USELESS ??
     @GET("GetMainRoutesForStop/{stopNo}")
