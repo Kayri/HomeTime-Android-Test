@@ -7,13 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.kayri.hometime.R
-import com.kayri.hometime.models.NextPredictedRoutesCollectionChild
+import com.kayri.hometime.models.NextPredictedRoutesCollection
 import kotlinx.android.synthetic.main.layout_tram_info.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class TramAdapter(val items: List<NextPredictedRoutesCollectionChild>, val context: Context?) : RecyclerView.Adapter<ViewHolder>() {
+class TramAdapter(val items: List<NextPredictedRoutesCollection>, val context: Context?) : RecyclerView.Adapter<ViewHolder>() {
 
     val dateFormatter = SimpleDateFormat("E dd hh:mm a")
     val timeFormatter = SimpleDateFormat("HH:mm")

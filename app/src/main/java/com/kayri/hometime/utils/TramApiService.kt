@@ -13,23 +13,27 @@ interface TramApiService {
 
     //Get Token
     @GET("GetDeviceToken")
-    fun getDeviceToken(@Query("aid") aid: String, @Query("devInfo") devInfo: String): Observable<DeviceToken>
+    fun getDeviceToken(@Query("aid") aid: String, @Query("devInfo") devInfo: String): Observable<DeviceTokenParent>
 
-    //Return all routes
+    //Return all routes without 35
     @GET("GetRouteSummaries")
-    fun getRouteSummaries(@Query("aid") aid: String, @Query("tkn") tkn: String): Observable<RouteSummaries>
+    fun getRouteSummaries(@Query("aid") aid: String, @Query("tkn") tkn: String): Observable<RouteSummariesParent>
+
+    //Return all Stop for one Route
+    @GET("GetDestinationsForAllRoutes")
+    fun getDestinationsForAllRoutes(@Query("aid") aid: String, @Query("tkn") tkn: String): Observable<DestinationsForAllRoutesParent>
 
     //Return all Stop for one Route
     @GET("GetRouteStopsByRoute/{routeNo}")
-    fun getRouteStopsByRoute(@Path("routeNo") routeNo: Int, @Query("aid") aid: String, @Query("tkn") tkn: String): Observable<RouteStopsByRoute>
+    fun getRouteStopsByRoute(@Path("routeNo") routeNo: Int, @Query("aid") aid: String, @Query("tkn") tkn: String): Observable<RouteStopsByRouteParent>
 
     //Return all Route at one Stop //TODO USELESS ??
     @GET("GetMainRoutesForStop/{stopNo}")
-    fun getMainRoutesForStop(@Path("stopNo") stopNo: Int, @Query("aid") aid: String, @Query("tkn") tkn: String): Observable<MainRoutesForStop>
+    fun getMainRoutesForStop(@Path("stopNo") stopNo: Int, @Query("aid") aid: String, @Query("tkn") tkn: String): Observable<MainRoutesForStopParent>
 
     //Return prediction for Stop and Route
     @GET("GetNextPredictedRoutesCollection/{stopNo}/{routeNo}/{lowFloor}")
-    fun getNextPredictedRoutesCollection(@Path("stopNo") stopNo: Int, @Path("routeNo") routeNo: Int, @Path("lowFloor") lowFloor: Boolean, @Query("aid") aid: String, @Query("cid") cid: Int, @Query("tkn") tkn: String): Observable<NextPredictedRoutesCollection>
+    fun getNextPredictedRoutesCollection(@Path("stopNo") stopNo: Int, @Path("routeNo") routeNo: Int, @Path("lowFloor") lowFloor: Boolean, @Query("aid") aid: String, @Query("cid") cid: Int, @Query("tkn") tkn: String): Observable<NextPredictedRoutesCollectionParent>
 
 
     companion object {

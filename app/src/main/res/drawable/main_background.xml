@@ -1,10 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/gradient_0"
+        android:duration="3000" />
 
-    <gradient
-        android:angle="270"
-        android:endColor="#e27873"
-        android:startColor="#8193cc" />
+    <item
+        android:drawable="@drawable/gradient_45"
+        android:duration="3000" />
 
-</shape>
+    <item
+        android:drawable="@drawable/gradient_90"
+        android:duration="3000" />
+
+    <item
+        android:drawable="@drawable/gradient_135"
+        android:duration="3000" />
+
+    <item
+        android:drawable="@drawable/gradient_180"
+        android:duration="3000" />
+
+    <item
+        android:drawable="@drawable/gradient_225"
+        android:duration="3000" />
+
+    <item
+        android:drawable="@drawable/gradient_270"
+        android:duration="3000" />
+
+    <item
+        android:drawable="@drawable/gradient_315"
+        android:duration="3000" />
+</animation-list>

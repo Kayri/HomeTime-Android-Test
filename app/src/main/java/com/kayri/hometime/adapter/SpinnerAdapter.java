@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.kayri.hometime.R;
-import com.kayri.hometime.models.RouteStopsByRouteChild;
+import com.kayri.hometime.models.RouteStopsByRoute;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import java.util.List;
 public class SpinnerAdapter extends ArrayAdapter {
     private Context context;
     private int resource;
-    private List<RouteStopsByRouteChild> list;
+    private List<RouteStopsByRoute> list;
 
     public SpinnerAdapter(@NonNull Context context, int resource, @NonNull List objects) {
         super(context, resource, objects);

@@ -1,8 +1,10 @@
 package com.kayri.hometime
 
+import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.transition.TransitionManager
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -10,33 +12,39 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.kayri.hometime.adapter.SpinnerAdapter
 import com.kayri.hometime.adapter.TramAdapter
-import com.kayri.hometime.models.NextPredictedRoutesCollectionChild
-import com.kayri.hometime.models.RouteStopsByRouteChild
-import com.kayri.hometime.models.RouteSummariesChild
+import com.kayri.hometime.models.NextPredictedRoutesCollection
+import com.kayri.hometime.models.RouteStopsByRoute
+import com.kayri.hometime.models.RouteSummaries
 import com.kayri.hometime.utils.TramApiService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
+
 class MainActivity : AppCompatActivity() {
 
     private var disposable: Disposable? = null
     private lateinit var token: String
     private val aid: String = "TTIOSJSON"
-    private lateinit var chosenRoute: RouteSummariesChild
-    private lateinit var listRoute: List<RouteSummariesChild>
-    private lateinit var chosenStop: RouteStopsByRouteChild
-    private var listStop1: MutableList<RouteStopsByRouteChild> = mutableListOf()
-    private var listStop2: MutableList<RouteStopsByRouteChild> = mutableListOf()
-    private lateinit var listTime1: List<NextPredictedRoutesCollectionChild>
-    private lateinit var listTime2: List<NextPredictedRoutesCollectionChild>
+    private lateinit var chosenRoute: RouteSummaries
+    private var listRoute: MutableList<RouteSummaries> = mutableListOf()
+    private lateinit var chosenStop: RouteStopsByRoute
+    private var listStop1: MutableList<RouteStopsByRoute> = mutableListOf()
+    private var listStop2: MutableList<RouteStopsByRoute> = mutableListOf()
+    private lateinit var listTime1: List<NextPredictedRoutesCollection>
+    private lateinit var listTime2: List<NextPredictedRoutesCollection>
     private val tramApiServe = TramApiService.create()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val animationDrawable = constraintLayout.background as AnimationDrawable
+        animationDrawable.setEnterFadeDuration(1500)
+        animationDrawable.setExitFadeDuration(3000)
+        animationDrawable.start()
 
         getNewDeviceToken()
 
@@ -53,7 +61,6 @@ class MainActivity : AppCompatActivity() {
                 //Kotlin doesn’t have a ternary operator
                 direction3.text = if (switchDirection.isChecked) chosenRoute.UpDestination else chosenRoute.DownDestination
                 direction4.text = if (switchDirection.isChecked) chosenRoute.DownDestination else chosenRoute.UpDestination
-
                 spin_stop.visibility = View.GONE
                 group1.visibility = View.GONE
                 group2.visibility = View.GONE
@@ -118,17 +125,43 @@ class MainActivity : AppCompatActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { result ->
-                            fun selector(r: RouteSummariesChild): Int = r.InternalRouteNo
-                            listRoute = result.responseObject.sortedBy { selector(it) }
-                            val listItems = arrayOfNulls<String>(result.responseObject.size)
+                            listRoute = result.responseObject as MutableList<RouteSummaries>
+                            checkMissingRoute()
+                        },
+                        { error -> Toast.makeText(this, "No data", Toast.LENGTH_SHORT).show() }
+                )
+    }
+
+    private fun checkMissingRoute() {
+        disposable = tramApiServe.getDestinationsForAllRoutes(aid, token)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { result ->
+
+                            for (data in result.responseObject) {
+                                if (listRoute.none { it.RouteNo == data.RouteNumber }) {
+                                    var tempUpDestination = ""
+                                    var tempDownDestination = ""
+                                    for (tmp in result.responseObject.filter { it.RouteNumber == data.RouteNumber }) {
+                                        if (tmp.IsUpStop) tempUpDestination = tmp.Name
+                                        else tempDownDestination = tmp.Name
+                                    }
+                                    listRoute.add(listRoute.size, RouteSummaries(tempDownDestination + " - " + tempUpDestination, data.RouteNumber, data.RouteNumber.toInt(), tempUpDestination, tempDownDestination))
+                                }
+                            }
+
+                            fun selector(r: RouteSummaries): Int = r.InternalRouteNo
+                            listRoute.sortBy { selector(it) }
+                            val listItems = arrayOfNulls<String>(listRoute.size)
                             for (i in 0 until listRoute.size) {
                                 listItems[i] = listRoute[i].RouteNo + " - " + listRoute[i].Description
                             }
-                            //val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, listItems)
                             val adapter = ArrayAdapter(this, R.layout.layout_spinner_item, R.id.spinTextView, listItems)
                             spin_route.adapter = adapter
+                            spin_route.visibility = View.VISIBLE
                         },
-                        { error -> Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show() }
+                        { error -> Toast.makeText(this, "No data", Toast.LENGTH_SHORT).show() }
                 )
     }
 
@@ -142,7 +175,6 @@ class MainActivity : AppCompatActivity() {
                             //init listStop
                             listStop1.clear()
                             listStop2.clear()
-                            //val listItems = arrayOfNulls<String>(result.responseObject.size)
                             for (stop in result.responseObject) {
                                 if (!stop.UpStop)
                                     listStop1.add(stop)
@@ -152,13 +184,14 @@ class MainActivity : AppCompatActivity() {
                             val adapter = if (switchDirection.isChecked) SpinnerAdapter(this, R.layout.layout_spinner_item, listStop2)
                             else SpinnerAdapter(this, R.layout.layout_spinner_item, listStop1)
                             spin_stop.adapter = adapter
+                            TransitionManager.beginDelayedTransition(constraintLayout)
                             spin_stop.visibility = View.VISIBLE
                         },
                         { error -> Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show() }
                 )
     }
 
-    private fun getTimeByRoutAndStop(chosenRoute: RouteSummariesChild, chosenStop: RouteStopsByRouteChild) {
+    private fun getTimeByRoutAndStop(chosenRoute: RouteSummaries, chosenStop: RouteStopsByRoute) {
         recyclerView1.adapter = null
         recyclerView2.adapter = null
 
@@ -170,9 +203,10 @@ class MainActivity : AppCompatActivity() {
                             listTime1 = result.responseObject
                             recyclerView1.layoutManager = LinearLayoutManager(baseContext)
                             recyclerView1.adapter = TramAdapter(listTime1, baseContext)
+                            TransitionManager.beginDelayedTransition(constraintLayout)
                             group1.visibility = View.VISIBLE
                         },
-                        { error -> Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show() }
+                        { error -> Toast.makeText(this, "No data", Toast.LENGTH_SHORT).show() }
                 )
 
         var inverseStop = if (switchDirection.isChecked) listStop1.find { it.StopSequence == chosenStop.StopSequence } else listStop2.find { it.StopSequence == chosenStop.StopSequence }
@@ -186,9 +220,10 @@ class MainActivity : AppCompatActivity() {
                                 listTime2 = result.responseObject
                                 recyclerView2.layoutManager = LinearLayoutManager(baseContext)
                                 recyclerView2.adapter = TramAdapter(listTime2, baseContext)
+                                TransitionManager.beginDelayedTransition(constraintLayout)
                                 group2.visibility = View.VISIBLE
                             },
-                            { error -> Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show() }
+                            { /*error -> Toast.makeText(this, "No data", Toast.LENGTH_SHORT).show()*/ }
                     )
 
 

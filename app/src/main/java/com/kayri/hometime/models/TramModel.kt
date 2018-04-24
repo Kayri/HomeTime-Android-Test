@@ -1,14 +1,20 @@
 package com.kayri.hometime.models
 
 //Get the token
-class DeviceToken(val responseObject: List<DeviceTokenChild>)
-
-class DeviceTokenChild(val DeviceToken: String)
+class DeviceTokenParent(val responseObject: List<DeviceToken>)
+class DeviceToken(val DeviceToken: String)
 
 //Return all routes
-class RouteSummaries(val responseObject: List<RouteSummariesChild>)
+class DestinationsForAllRoutesParent(val responseObject: List<DestinationsForAllRoutes>)
+class DestinationsForAllRoutes(
+        val RouteNumber: String,
+        val Name: String,
+        val IsUpStop: Boolean
+)
 
-class RouteSummariesChild(
+//Return all routes without 35
+class RouteSummariesParent(val responseObject: List<RouteSummaries>)
+class RouteSummaries(
         val Description: String,
         val RouteNo: String,
         val InternalRouteNo: Int,
@@ -16,9 +22,8 @@ class RouteSummariesChild(
         val DownDestination: String)
 
 //Return all Stop for one Route
-class RouteStopsByRoute(val responseObject: List<RouteStopsByRouteChild>)
-
-class RouteStopsByRouteChild(
+class RouteStopsByRouteParent(val responseObject: List<RouteStopsByRoute>)
+class RouteStopsByRoute(
         val StopName: String,
         val StopNo: Int,
         val SuburbName: String,
@@ -27,14 +32,12 @@ class RouteStopsByRouteChild(
 )
 
 //Return all Route at one Stop
-class MainRoutesForStop(val responseObject: List<MainRoutesForStopChild>)
-
-class MainRoutesForStopChild(val RouteNo: String)
+class MainRoutesForStopParent(val responseObject: List<MainRoutesForStop>)
+class MainRoutesForStop(val RouteNo: String)
 
 //Return prediction for Stop and Route
-class NextPredictedRoutesCollection(val responseObject: List<NextPredictedRoutesCollectionChild>)
-
-class NextPredictedRoutesCollectionChild(
+class NextPredictedRoutesCollectionParent(val responseObject: List<NextPredictedRoutesCollection>)
+class NextPredictedRoutesCollection(
         val PredictedArrivalDateTime: String,
         val VehicleNo: Int
 )
