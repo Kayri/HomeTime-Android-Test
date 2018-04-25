@@ -43,7 +43,7 @@ public class SpinnerAdapter extends ArrayAdapter {
     private View createItemView(int position, View convertView, ViewGroup parent) {
         View view = LayoutInflater.from(context).inflate(resource, parent, false);
         TextView tvSpinner = view.findViewById(R.id.spinTextView);
-        tvSpinner.setText(list.get(position).getStopName());
+        tvSpinner.setText(list.get(position).getStopName() + " - " + list.get(position).getSuburbName());
         return view;
     }
 }
