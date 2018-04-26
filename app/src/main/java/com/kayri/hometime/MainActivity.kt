@@ -10,7 +10,9 @@ import android.transition.TransitionManager
 import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.Animation
 import android.view.animation.AnticipateOvershootInterpolator
+import android.view.animation.RotateAnimation
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -31,9 +33,9 @@ class MainActivity : AppCompatActivity() {
     private var disposable: Disposable? = null
     private lateinit var token: String
     private val aid: String = "TTIOSJSON"
-    private lateinit var chosenRoute: RouteSummaries
+    private var chosenRoute: RouteSummaries? = null
     private var listRoute: MutableList<RouteSummaries> = mutableListOf()
-    private lateinit var chosenStop: RouteStopsByRoute
+    private var chosenStop: RouteStopsByRoute? = null
     private var listStop1: MutableList<RouteStopsByRoute> = mutableListOf()
     private var listStop2: MutableList<RouteStopsByRoute> = mutableListOf()
     private lateinit var listTime1: List<NextPredictedRoutesCollection>
@@ -60,10 +62,10 @@ class MainActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 TransitionManager.beginDelayedTransition(constraintLayout)
                 chosenRoute = listRoute[position]
-                direction1.text = chosenRoute.DownDestination
-                direction2.text = chosenRoute.UpDestination
+                direction1.text = chosenRoute?.DownDestination
+                direction2.text = chosenRoute?.UpDestination
 
-                getStopList(chosenRoute.InternalRouteNo)
+                getStopList(chosenRoute!!.InternalRouteNo)
 
             }
 
@@ -76,7 +78,7 @@ class MainActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
                 chosenStop = if (isChecked) listStop2[position] else listStop1[position]
-                getTimeByRoutAndStop(chosenRoute, chosenStop)
+                getTimeByRoutAndStop(chosenRoute!!, chosenStop!!)
 
             }
         }
@@ -110,9 +112,33 @@ class MainActivity : AppCompatActivity() {
 
                     }
                     .start()
-
-
         }
+
+        fab_refresh.setOnClickListener { fabView ->
+            fabView.clearAnimation()
+            val anim = RotateAnimation(0f, -1080f,
+                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                    0.5f)
+            anim.duration = 500
+            anim.interpolator = AccelerateDecelerateInterpolator()
+            anim.setAnimationListener(object: Animation.AnimationListener {
+                override fun onAnimationRepeat(animation: Animation?) {
+                }
+
+                override fun onAnimationEnd(animation: Animation?) {
+                    if (chosenRoute != null && chosenStop != null)
+                        getTimeByRoutAndStop(chosenRoute!!, chosenStop!!)
+                    else
+                        getNewDeviceToken()
+                }
+
+                override fun onAnimationStart(animation: Animation?) {
+                }
+
+            })
+            fabView.startAnimation(anim)
+        }
+
 
     }
 
@@ -262,5 +288,11 @@ class MainActivity : AppCompatActivity() {
 
                             }
                     )
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        //TransitionName view stay when activity close
+        finish()
     }
 }
