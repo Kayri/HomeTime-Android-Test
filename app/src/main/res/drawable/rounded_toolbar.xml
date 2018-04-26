@@ -8,7 +8,7 @@
             <size
                 android:width="25dp"
                 android:height="25dp" />
-            <solid android:color="@color/colorPrimary" />
+            <solid android:color="@color/colorSplash" />
         </shape>
     </item>
 
@@ -19,7 +19,7 @@
             <size
                 android:width="25dp"
                 android:height="25dp" />
-            <solid android:color="@color/colorPrimary" />
+            <solid android:color="@color/colorSplash" />
         </shape>
     </item>
 
@@ -30,7 +30,7 @@
             <size
                 android:width="25dp"
                 android:height="25dp" />
-            <solid android:color="@color/colorPrimary" />
+            <solid android:color="@color/colorSplash" />
         </shape>
     </item>
 
@@ -39,7 +39,7 @@
             <size
                 android:width="50dp"
                 android:height="50dp" />
-            <solid android:color="@color/colorPrimary" />
+            <solid android:color="@color/colorSplash" />
         </shape>
     </item>
 </layer-list>
