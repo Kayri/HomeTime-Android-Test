@@ -1,5 +1,6 @@
 package com.kayri.hometime.utils
 
+import com.kayri.hometime.BuildConfig
 import com.kayri.hometime.models.*
 import io.reactivex.Observable
 import retrofit2.Retrofit
@@ -20,12 +21,16 @@ interface TramApiService {
     fun getRouteSummaries(@Query("aid") aid: String, @Query("tkn") tkn: String): Observable<RouteSummariesParent>
 
     //Return all Stop for one Route
-    @GET("GetDestinationsForAllRoutes")
-    fun getDestinationsForAllRoutes(@Query("aid") aid: String, @Query("tkn") tkn: String): Observable<DestinationsForAllRoutesParent>
-
-    //Return all Stop for one Route
     @GET("GetRouteStopsByRoute/{routeNo}")
     fun getRouteStopsByRoute(@Path("routeNo") routeNo: Int, @Query("aid") aid: String, @Query("tkn") tkn: String): Observable<RouteStopsByRouteParent>
+
+    //Return all Stop for one Route
+    @GET("GetStopInformation/{stopNo}")
+    fun getStopInformation(@Path("stopNo") stopNo: Int, @Query("aid") aid: String, @Query("tkn") tkn: String): Observable<StopInformationParent>
+
+    //Return all Stop for one Route
+    @GET("GetDestinationsForAllRoutes")
+    fun getDestinationsForAllRoutes(@Query("aid") aid: String, @Query("tkn") tkn: String): Observable<DestinationsForAllRoutesParent>
 
     //Return all Route at one Stop //TODO USELESS ??
     @GET("GetMainRoutesForStop/{stopNo}")
@@ -43,7 +48,7 @@ interface TramApiService {
                     .addCallAdapterFactory(
                             RxJava2CallAdapterFactory.create())
                     .addConverterFactory(MoshiConverterFactory.create())
-                    .baseUrl("http://ws3.tramtracker.com.au/TramTracker/RestService/")
+                    .baseUrl(BuildConfig.API_BASE_URL)
                     .build()
 
             return retrofit.create(TramApiService::class.java)
