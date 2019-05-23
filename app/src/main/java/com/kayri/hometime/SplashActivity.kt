@@ -1,10 +1,12 @@
 package com.kayri.hometime
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.ActivityOptionsCompat
-import android.support.v7.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
+import androidx.core.app.ActivityOptionsCompat
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.view.animation.Animation
@@ -27,18 +29,22 @@ import pl.droidsonroids.gif.GifDrawable
 import java.text.SimpleDateFormat
 import java.util.*
 
+const val EXTRA_TOKEN = "com.HomeTime.EXTRA_TOKEN"
 
 class SplashActivity : AppCompatActivity() {
+    lateinit  var sharedPref: SharedPreferences
 
     private lateinit var disposable: Disposable
-    lateinit var tramApiService: TramApiService
+    private lateinit var tramApiService: TramApiService
     lateinit var token: String
     lateinit var realm: Realm
     lateinit var routesList: RealmResults<Route>
+    var skipDownload = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+        sharedPref = getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE)
 
         disposable = CompositeDisposable()
         tramApiService = TramApiService.create()
@@ -54,7 +60,9 @@ class SplashActivity : AppCompatActivity() {
 
         //TODO Skip if DB full and Token in SharedPreferences
         routesList = realm.where<Route>().findAll()
-        getDeviceToken()
+        if (routesList.isEmpty() || sharedPref.getString(EXTRA_TOKEN,"") == "")
+            getDeviceToken()
+        else  skipDownload = true
 
 
         val gifFromResource = GifDrawable(resources, R.raw.bg_train_journey)
@@ -68,6 +76,10 @@ class SplashActivity : AppCompatActivity() {
 
             override fun onAnimationEnd(animation: Animation?) {
                 titleView.visibility = View.VISIBLE
+                if (skipDownload){
+                    startActivity()
+                }
+
             }
 
             override fun onAnimationStart(animation: Animation?) {
@@ -84,11 +96,7 @@ class SplashActivity : AppCompatActivity() {
         gifFromResource.addAnimationListener {
             //TODO find another way as listener
             if (disposable.isDisposed && !routesList.isEmpty()) {
-                val i = Intent(baseContext, MainActivity::class.java)
-                val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        this@SplashActivity, titleView, getString(R.string.app_name)
-                )
-                startActivity(i, options.toBundle())
+                startActivity()
             }
             //Log.d("DISPO", "DISP: ${disposable?.isDisposed}")
         }
@@ -105,6 +113,7 @@ class SplashActivity : AppCompatActivity() {
                 .subscribe(
                         { result ->
                             token = result.responseObject[0].DeviceToken
+                            sharedPref.edit().putString(EXTRA_TOKEN,token).apply()
                             getRouteSummaries()
                         }, this::handleError))
     }
@@ -166,6 +175,44 @@ class SplashActivity : AppCompatActivity() {
                         }, this::handleError))
     }
 
+    //TODO Get Route 35
+    /*private fun checkMissingRoute() {
+        disposable = tramApiServe.getDestinationsForAllRoutes(aid, token)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { result ->
+
+                            for (data in result.responseObject) {
+                                if (listRoute.none { it.RouteNo == data.RouteNumber }) {
+                                    var tempUpDestination = ""
+                                    var tempDownDestination = ""
+                                    for (tmp in result.responseObject.filter { it.RouteNumber == data.RouteNumber }) {
+                                        if (tmp.IsUpStop) tempUpDestination = tmp.Name
+                                        else tempDownDestination = tmp.Name
+                                    }
+                                    listRoute.add(listRoute.size, RouteSummaries(tempDownDestination + " - " + tempUpDestination, data.RouteNumber, data.RouteNumber.toInt(), tempUpDestination, tempDownDestination))
+                                }
+                            }
+
+                            fun selector(r: RouteSummaries): Int = r.InternalRouteNo
+                            listRoute.sortBy { selector(it) }
+                            val listItems = arrayOfNulls<String>(listRoute.size)
+                            for (i in 0 until listRoute.size) {
+                                listItems[i] = listRoute[i].RouteNo + " - " + listRoute[i].Description
+                            }
+                            val adapter = ArrayAdapter(this, R.layout.layout_spinner_item, R.id.spinTextView, listItems)
+                            spin_route.adapter = adapter
+
+                        },
+                        { error ->
+                            Toast.makeText(this, "No data", Toast.LENGTH_SHORT).show()
+                            Log.w("Error MissRoute", error.message)
+                        }
+                )
+    }*/
+
+
     /*
     fun getStopInformation(stopNo: Int): String {
         var flagStopNo = ""
@@ -185,6 +232,14 @@ class SplashActivity : AppCompatActivity() {
         Log.d("ERROR", error.localizedMessage)
         Snackbar.make(findViewById(R.id.constraintSplash), "Error ${error.localizedMessage}", Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.retry) { getDeviceToken() }.show()
+    }
+
+    private fun startActivity(){
+        val i = Intent(baseContext, MainActivity::class.java)
+        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this@SplashActivity, titleView, getString(R.string.app_name)
+        )
+        startActivity(i, options.toBundle())
     }
 
 }

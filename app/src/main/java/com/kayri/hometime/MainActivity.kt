@@ -1,38 +1,26 @@
 package com.kayri.hometime
 
-import android.graphics.drawable.AnimationDrawable
+import android.content.Context
 import android.os.Bundle
-import android.support.constraint.ConstraintSet
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.transition.ChangeBounds
-import android.transition.TransitionManager
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
-import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.Animation
-import android.view.animation.AnticipateOvershootInterpolator
-import android.view.animation.RotateAnimation
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Toast
-import com.kayri.hometime.adapter.SpinnerAdapter
-import com.kayri.hometime.adapter.TramAdapter
-import com.kayri.hometime.models.NextPredictedRoutesCollection
-import com.kayri.hometime.models.RouteStopsByRoute
-import com.kayri.hometime.models.RouteSummaries
-import com.kayri.hometime.utils.TramApiService
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.kayri.hometime.models.Route
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import io.realm.Realm
+import io.realm.RealmConfiguration
+import io.realm.RealmResults
+import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
 
+    lateinit var token: String
+    lateinit var realm: Realm
+    lateinit var routesList: RealmResults<Route>
+
+/*
     private var disposable: Disposable? = null
-    private lateinit var token: String
-    private val aid: String = "TTIOSJSON"
     private var chosenRoute: RouteSummaries? = null
     private var listRoute: MutableList<RouteSummaries> = mutableListOf()
     private var chosenStop: RouteStopsByRoute? = null
@@ -41,19 +29,31 @@ class MainActivity : AppCompatActivity() {
     private lateinit var listTime1: List<NextPredictedRoutesCollection>
     private lateinit var listTime2: List<NextPredictedRoutesCollection>
     private val tramApiServe = TramApiService.create()
-    private var isChecked: Boolean = false
+    private var isChecked: Boolean = false*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
+        //setSupportActionBar(toolbar)
 
-        val animationDrawable = constraintLayout.background as AnimationDrawable
+        realm = Realm.getInstance(RealmConfiguration.Builder()
+                .name(BuildConfig.DATABASE_NAME)
+                .schemaVersion(BuildConfig.DATABASE_VERSION.toLong())
+                .deleteRealmIfMigrationNeeded()
+                .build())
+
+        token = getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE)
+                .getString(EXTRA_TOKEN,"")
+        routesList = realm.where<Route>().findAll()
+
+
+        /*val animationDrawable = constraintLayout.background as AnimationDrawable
         animationDrawable.setEnterFadeDuration(1500)
         animationDrawable.setExitFadeDuration(3000)
         animationDrawable.start()
 
-        getNewDeviceToken()
+
+        //getNewDeviceToken()
 
         spin_route.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
                 direction1.text = chosenRoute?.DownDestination
                 direction2.text = chosenRoute?.UpDestination
 
-                getStopList(chosenRoute!!.InternalRouteNo)
+                //getStopList(chosenRoute!!.InternalRouteNo)
 
             }
 
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
                 chosenStop = if (isChecked) listStop2[position] else listStop1[position]
-                getTimeByRoutAndStop(chosenRoute!!, chosenStop!!)
+                //getTimeByRoutAndStop(chosenRoute!!, chosenStop!!)
 
             }
         }
@@ -121,15 +121,15 @@ class MainActivity : AppCompatActivity() {
                     0.5f)
             anim.duration = 500
             anim.interpolator = AccelerateDecelerateInterpolator()
-            anim.setAnimationListener(object: Animation.AnimationListener {
+            anim.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationRepeat(animation: Animation?) {
                 }
 
                 override fun onAnimationEnd(animation: Animation?) {
-                    if (chosenRoute != null && chosenStop != null)
+                    *//*if (chosenRoute != null && chosenStop != null)
                         getTimeByRoutAndStop(chosenRoute!!, chosenStop!!)
                     else
-                        getNewDeviceToken()
+                        getNewDeviceToken()*//*
                 }
 
                 override fun onAnimationStart(animation: Animation?) {
@@ -137,12 +137,12 @@ class MainActivity : AppCompatActivity() {
 
             })
             fabView.startAnimation(anim)
-        }
+        }*/
 
 
     }
 
-    private fun getNewDeviceToken() {
+    /*private fun getNewDeviceToken() {
         disposable = tramApiServe.getDeviceToken(aid, "HomeTimeiOS")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -288,7 +288,7 @@ class MainActivity : AppCompatActivity() {
 
                             }
                     )
-    }
+    }*/
 
     override fun onBackPressed() {
         super.onBackPressed()
