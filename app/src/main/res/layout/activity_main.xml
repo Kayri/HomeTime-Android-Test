@@ -33,17 +33,25 @@
             android:paddingEnd="12dp"
             android:paddingRight="12dp"
             app:contentInsetStart="0dp"
-            app:navigationIcon="@drawable/shr_branded_menu"
-            />
+            app:navigationIcon="@drawable/shr_branded_menu">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:textColor="@color/holo_blue_light"
+                android:transitionName="@string/app_name"
+                android:text="@string/app_name"/>
+        </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/tram_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="56dp"
+        android:layout_marginRight="8dp"
         android:background="@drawable/tram_layout_background_shape"
         android:elevation="8dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">

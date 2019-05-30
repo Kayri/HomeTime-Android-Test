@@ -54,12 +54,21 @@ class NextPredictedRoutesCollectionParent(val responseObject: List<NextPredicted
 class NextPredictedRoutesCollection(
         val PredictedArrivalDateTime: String,
         val VehicleNo: Int
+        /*val AirConditioned: Boolean,
+        val DisplayAC: Boolean,
+        val DisruptionMessage: DisruptionMessage,
+        val HasDisruption: Boolean,
+        val HasSpecialEvent: Boolean,
+        val SpecialEventMessage: String,
+        val IsLowFloorTram: Boolean*/
+
 )
 
 // DATABASE MODEL
 //TODO fusion with retrofit class model possible ??
 open class Route : RealmObject() {
     @PrimaryKey
+    var id: Int = 0
     var InternalRouteNo: Int = 0
     var Description: String = ""
     var RouteNo: String = ""

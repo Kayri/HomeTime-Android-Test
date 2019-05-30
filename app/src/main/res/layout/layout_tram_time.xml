@@ -6,66 +6,120 @@
     android:layout_height="match_parent">
 
 
+    <TextView
+        android:id="@+id/routeNo_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="96" />
+
+    <TextView
+        android:id="@+id/routeDesc_textView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        app:layout_constraintBottom_toBottomOf="@+id/routeNo_textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/routeNo_textView"
+        app:layout_constraintTop_toTopOf="@+id/routeNo_textView"
+        tools:text="Melbourne Uni - Kew (Via St Kilda Beach)" />
 
     <ImageButton
         android:id="@+id/switchDestination"
+        style="?attr/buttonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:src="@drawable/ic_tram_white"
-        app:layout_constraintEnd_toStartOf="@+id/textView2"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/ic_sync_white"
+        android:theme="@style/SwitchButton"
+        app:layout_constraintEnd_toEndOf="@+id/cardView_spin"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/destinationFrom"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         android:textAlignment="center"
-        android:text="Melbourne University via St Kilda"
-        app:layout_constraintBottom_toBottomOf="@+id/switchDestination"
-        app:layout_constraintEnd_toStartOf="@+id/switchDestination"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/switchDestination" />
+        app:layout_constraintTop_toTopOf="@+id/imageView"
+        tools:text="Melbourne University via St Kilda" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/ic_arrow_forward_white"
+        app:layout_constraintEnd_toStartOf="@+id/destinationTo"
+        app:layout_constraintStart_toEndOf="@+id/destinationFrom"
+        app:layout_constraintTop_toBottomOf="@+id/routeNo_textView" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/destinationTo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
         android:textAlignment="center"
-        android:text="East Malvern via St Kilda"
-        app:layout_constraintBottom_toBottomOf="@+id/switchDestination"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/switchDestination"
-        app:layout_constraintTop_toTopOf="@+id/switchDestination" />
-
-    <Spinner
-        android:id="@+id/spinnerStops"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="94dp"
-        android:spinnerMode="dialog"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="@+id/imageView"
+        tools:text="East Malvern via St Kilda" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
+        android:id="@+id/cardView_spin"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerStops">
+        app:layout_constraintTop_toBottomOf="@+id/switchDestination">
 
-        <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"></ListView>
+        <Spinner
+            android:id="@+id/spinnerStops"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:spinnerMode="dialog" />
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="32dp"
+        android:elevation="4dp"
+        android:padding="4dp"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView_spin"
+        app:layout_constraintVertical_bias="0.1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/time_listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none" />
 
     </androidx.cardview.widget.CardView>
 

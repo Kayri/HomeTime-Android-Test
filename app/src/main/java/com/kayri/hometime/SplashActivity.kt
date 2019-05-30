@@ -4,14 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.core.app.ActivityOptionsCompat
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
+import com.google.android.material.snackbar.Snackbar
 import com.kayri.hometime.models.Route
 import com.kayri.hometime.models.Stop
 import com.kayri.hometime.utils.TramApiService
@@ -26,8 +25,6 @@ import io.realm.kotlin.createObject
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_splash.*
 import pl.droidsonroids.gif.GifDrawable
-import java.text.SimpleDateFormat
-import java.util.*
 
 const val EXTRA_TOKEN = "com.HomeTime.EXTRA_TOKEN"
 
@@ -64,7 +61,6 @@ class SplashActivity : AppCompatActivity() {
             getDeviceToken()
         else  skipDownload = true
 
-
         val gifFromResource = GifDrawable(resources, R.raw.bg_train_journey)
         gifView.setImageDrawable(gifFromResource)
 
@@ -79,6 +75,9 @@ class SplashActivity : AppCompatActivity() {
                 if (skipDownload){
                     startActivity()
                 }
+                else
+                    loaderView.visibility = View.VISIBLE
+
 
             }
 
@@ -89,16 +88,12 @@ class SplashActivity : AppCompatActivity() {
         animFadeIn.duration = gifFromResource.duration.toLong()
         titleView.startAnimation(animFadeIn)
 
-
-        val date = SimpleDateFormat("E dd hh:mm a").format(Date(1557905148440))
-        Toast.makeText(this, date.toString(), Toast.LENGTH_LONG).show()
-        Log.d("DATE", date.toString())
         gifFromResource.addAnimationListener {
             //TODO find another way as listener
             if (disposable.isDisposed && !routesList.isEmpty()) {
+                loaderView.visibility = View.GONE
                 startActivity()
             }
-            //Log.d("DISPO", "DISP: ${disposable?.isDisposed}")
         }
 
 
@@ -126,15 +121,18 @@ class SplashActivity : AppCompatActivity() {
 
                     //Save new Route object in sql db
                     //Sort Routes by Internal No
+                    var id = 0
                     for (route in result.responseObject.sortedBy { it.InternalRouteNo }) {
                         if (realm.where<Route>().equalTo("InternalRouteNo", route.InternalRouteNo).findAll().isEmpty())
                             realm.executeTransaction {
-                                val r = realm.createObject<Route>(route.InternalRouteNo)
+                                val r = realm.createObject<Route>(id)
+                                r.InternalRouteNo = route.InternalRouteNo
                                 r.RouteNo = route.RouteNo
                                 r.Description = route.Description
                                 r.DownDestination = route.DownDestination
                                 r.UpDestination = route.UpDestination
                                 getRouteStopsByRoute(r.InternalRouteNo, r)
+                                id++
                             }
                     }
                 }, this::handleError))
@@ -201,7 +199,7 @@ class SplashActivity : AppCompatActivity() {
                             for (i in 0 until listRoute.size) {
                                 listItems[i] = listRoute[i].RouteNo + " - " + listRoute[i].Description
                             }
-                            val adapter = ArrayAdapter(this, R.layout.layout_spinner_item, R.id.spinTextView, listItems)
+                            val adapter = ArrayAdapter(this, R.layout.item_spinner_stop, R.id.spinTextView, listItems)
                             spin_route.adapter = adapter
 
                         },
@@ -229,7 +227,7 @@ class SplashActivity : AppCompatActivity() {
 
     //Error Connection retry button
     private fun handleError(error: Throwable) {
-        Log.d("ERROR", error.localizedMessage)
+        Log.w("DEBUG", error.localizedMessage)
         Snackbar.make(findViewById(R.id.constraintSplash), "Error ${error.localizedMessage}", Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.retry) { getDeviceToken() }.show()
     }

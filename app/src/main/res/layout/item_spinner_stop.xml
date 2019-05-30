@@ -12,9 +12,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_marginStart="84dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="234" />
@@ -25,13 +27,15 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:ellipsize="end"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
         android:maxLines="1"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/suburbName"
         app:layout_constraintStart_toEndOf="@+id/flagStopNo"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Nicholson St and Victoria PdeNicholson St and Victoria PdeNicholson St and Victoria Pde" />
+        tools:text="Nicholson St " />
 
     <View
         android:id="@+id/divider"
@@ -43,6 +47,23 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/flagStopNo" />
+        app:layout_constraintTop_toBottomOf="@id/flagStopNo"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/suburbName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        tools:text="TextView"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/stopName"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

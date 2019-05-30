@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+
+
+    <color name="colorPrimary">#121212</color>
+    <color name="colorPrimaryDark">#121212</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorSplash">#1a1f35</color>
-    <color name="productGridBackgroundColor">#FFFBFA</color>
+    <color name="colorSplash">#91A4F7</color>
+    <color name="holo_blue_light">#ff33b5e5</color>
+
+
+    <color name="elevation00dp">#121212</color>
+    <color name="elevation01dp">#1d1d1d</color>
+    <color name="elevation02dp">#222222</color>
+    <color name="elevation03dp">#242424</color>
+    <color name="elevation04dp">#272727</color>
+    <color name="elevation06dp">#2c2c2c</color>
+    <color name="elevation08dp">#2e2e2e</color>
+    <color name="elevation12dp">#333333</color>
+    <color name="elevation16dp">#363636</color>
+    <color name="elevation24dp">#383838</color>
 
 </resources>

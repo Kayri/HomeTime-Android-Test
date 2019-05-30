@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">HomeTime</string>
-    <string name="direction">Direction -> </string>
     <string name="retry">RETRY</string>
     <string name="preference_file_key">HomeTimeSharedPrefs</string>
+    <string name="loading">LOADING</string>
+    <string name="direction">Direction</string>
 </resources>

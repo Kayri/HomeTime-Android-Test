@@ -20,7 +20,7 @@ class RoutesListAdapter(val context: Context, val items: RealmResults<Route>) : 
         val view: View
         val vh: ItemRowHolder
         if (convertView == null) {
-            view = inflater.inflate(R.layout.item_row_tram_route, parent, false)
+            view = inflater.inflate(R.layout.item_backdrop_route, parent, false)
             vh = ItemRowHolder(view)
             view?.tag = vh
         } else {

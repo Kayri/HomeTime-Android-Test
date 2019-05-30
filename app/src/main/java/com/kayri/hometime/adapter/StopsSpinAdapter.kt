@@ -10,15 +10,16 @@ import com.kayri.hometime.R
 import com.kayri.hometime.models.Stop
 import io.realm.RealmList
 
-class StopsSpinAdapter(val context: Context, val items: RealmList<Stop>) : BaseAdapter() {
+class StopsSpinAdapter(val context: Context) : BaseAdapter() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
+    var items: RealmList<Stop>? = null
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
         val vh: ItemRowHolder
         if (convertView == null) {
-            view = inflater.inflate(R.layout.item_spin_tram_stop, parent, false)
+            view = inflater.inflate(R.layout.item_spinner_stop, parent, false)
             vh = ItemRowHolder(view)
             view?.tag = vh
         } else {
@@ -26,8 +27,11 @@ class StopsSpinAdapter(val context: Context, val items: RealmList<Stop>) : BaseA
             vh = view.tag as ItemRowHolder
         }
 
-        vh.flag.text = items[position]?.FlagStopNo
-        vh.stopName.text = items[position]?.StopName
+        if (!items.isNullOrEmpty()) {
+            vh.flag.text = items!![position]?.FlagStopNo
+            vh.stopName.text = items!![position]?.StopName
+            vh.suburbName.text = "(${items!![position]?.SuburbName})"
+        }
 
         return view
     }
@@ -43,13 +47,14 @@ class StopsSpinAdapter(val context: Context, val items: RealmList<Stop>) : BaseA
     }
 
     override fun getCount(): Int {
-        return items.size
+        return if (items.isNullOrEmpty()) 0 else items!!.size
     }
 
     private class ItemRowHolder(row: View?) {
 
         val flag: TextView = row?.findViewById(R.id.flagStopNo) as TextView
         val stopName: TextView = row?.findViewById(R.id.stopName) as TextView
+        val suburbName: TextView = row?.findViewById(R.id.suburbName) as TextView
 
     }
 }
