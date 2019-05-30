@@ -2,6 +2,12 @@
 
 HomeTime is an application for Android users to track public transport on the tram network in Melbourne.
 
+#### Features in progress
+* Track route tram no 35
+* ShardPref save last track
+* Refactoring code
+* Add Animation (UI)
+
 ### Functionality
 
 #### Features available in the application:
@@ -33,4 +39,4 @@ You have to download the git file, and open it with Android Studio
 
 ## Authors
 
-* **Mehdi Peluffe** - *Initial work* - [My Resume](https://drive.google.com/drive/folders/12J5nxiOUNh4dO3ruTf3Q_1nSjbdDY9Ox?usp=sharing)
+* **Mehdi Peluffe** - *Initial work* - [My website](mehdiatique.com)
